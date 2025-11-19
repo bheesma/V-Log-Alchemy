@@ -1,0 +1,72 @@
+// ACES (AP0) to FUJIFILM F-Log2C Inverse Transform
+// Based on FUJIFILM Official IDT
+// Inverse written by AI Assistant
+
+__CONSTANT__ float log_base = 10.0f;
+
+// 原始常数保持不变
+__CONSTANT__ float cut2 = 0.100686685370811f;
+__CONSTANT__ float f = 0.092864000000000f;
+__CONSTANT__ float e = 8.799461000000000f;
+__CONSTANT__ float d = 0.384316000000000f;
+__CONSTANT__ float c = 0.245281000000000f;
+__CONSTANT__ float a = 5.555556000000000f;
+__CONSTANT__ float b = 0.064829000000000f;
+
+// 这一步很关键：我们需要计算 Linear 域的切点
+// calculation: (cut2 - f) / e
+__CONSTANT__ float linear_cut = 0.000888995965f; 
+
+// 逆矩阵 (Inverse Matrix)
+// 这是对原始 F-Gamut -> AP0 矩阵求逆得到的，用于将 AP0 转回 F-Gamut
+// 这里的数值经过高精度计算
+__CONSTANT__ float inv_matrix_coef[9] = {
+     1.18953639f, -0.05277977f, -0.13553403f,
+     0.00071857f,  0.98909229f,  0.01132693f,
+     0.00959302f,  0.00494250f,  0.98650739f
+};
+
+__DEVICE__ inline float linear_to_log(float in)
+{
+    float out;
+
+    // 对应正向运算中的: out = (in - f) / e;
+    // 逆运算: in = out * e + f
+    if (in < linear_cut)
+    {
+        out = in * e + f;
+    }
+    // 对应正向运算中的: out = _powf(log_base, ((in - d) / c)) / a - b / a;
+    // 逆运算推导:
+    // y = (10^((x-d)/c))/a - b/a
+    // a*y + b = 10^((x-d)/c)
+    // log10(a*y + b) = (x-d)/c
+    // c * log10(a*y + b) + d = x
+    else
+    {
+        // 防止 log 负数，虽然在 cut 以上理论上不会发生，但为了鲁棒性
+        float temp = a * in + b;
+        if (temp <= 0.0f) temp = 0.000001f; 
+        
+        out = c * _log10f(temp) + d;
+    }
+
+    return out;
+}
+
+__DEVICE__ float3 transform(int p_Width, int p_Height, int p_X, int p_Y, float p_R, float p_G, float p_B)
+{
+    // 1. 先进行矩阵变换：ACES AP0 (Linear) -> F-Gamut (Linear)
+    // 注意：正向是先由曲线转 Linear 再乘矩阵，所以逆向必须先乘逆矩阵，再由曲线转 Log
+    
+    float r_lin = p_R * inv_matrix_coef[0] + p_G * inv_matrix_coef[1] + p_B * inv_matrix_coef[2];
+    float g_lin = p_R * inv_matrix_coef[3] + p_G * inv_matrix_coef[4] + p_B * inv_matrix_coef[5];
+    float b_lin = p_R * inv_matrix_coef[6] + p_G * inv_matrix_coef[7] + p_B * inv_matrix_coef[8];
+
+    // 2. 再进行曲线变换：Linear -> F-Log2C
+    float r_log = linear_to_log(r_lin);
+    float g_log = linear_to_log(g_lin);
+    float b_log = linear_to_log(b_lin);
+
+    return make_float3(r_log, g_log, b_log);
+}
