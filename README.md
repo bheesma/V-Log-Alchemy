@@ -120,7 +120,7 @@ For Panasonic models that support LUT loading, such as S1R II, S5M2, S1H.
 3. Load the LUT in the camera menu and apply it to V-Log View Assist.
 
 ### 🎨 Method B: DaVinci Resolve Workflow
-For maximum image quality (to avoid precision loss from LUTs), using the DCTL script in DaVinci Resolve is recommended.
+For maximum image quality (to avoid precision loss from LUTs), using the DCTL script in DaVinci Resolve is recommended. (Please note: DCTL is a feature exclusive to the paid DaVinci Resolve Studio version).
 
 **Node Structure:**
 1.  **CST Node**: Panasonic V-Gamut/V-Log -> ACES AP0 / Linear (No Tone Mapping).
