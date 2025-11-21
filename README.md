@@ -134,19 +134,33 @@ The LUTs in this repository are designed exclusively for **Panasonic V-Log / V-G
 
 ## 🛠️ Usage
 
-### 📷 Method A: In-Camera Monitoring
-For Panasonic models that support LUT loading, such as S1R II, S5M2, S1H.
-1. Download the `.cube` files from the `Luts` folder.
-2. Copy the files to an SD card.
-3. Load the LUT in the camera menu and apply it to V-Log View Assist.
+### 1. The Easy Way (For Camera / Real Time LUTs)
+I have included pre-generated 33-Point Cube LUTs in the repo.
 
-### 🎨 Method B: DaVinci Resolve Workflow
-For maximum image quality (to avoid precision loss from LUTs), using the DCTL script in DaVinci Resolve is recommended. (Please note: DCTL is a feature exclusive to the paid DaVinci Resolve Studio version).
+1.  Download the `.cube` files.
+2.  Copy them to your camera's SD card (or use the Lumix Lab App).
+3.  Load them into the LUT Library.
+4.  Shoot straight-out-of-camera JPEGs or Video with the Fuji look baked in!
 
-**Node Structure:**
-1.  **CST Node**: Panasonic V-Gamut/V-Log -> ACES AP0 / Linear. **Important**: In the CST node settings, disable **Tone Mapping** and **White Point Adaptation**.
-2.  **DCTL Node**: Load the `ACES_to_FLog2C_Inverse.dctl` script provided in this project.
-3.  **LUT Node**: Apply the official Fujifilm F-Log2C film simulation LUT.
+### 2. The Standard Way (For DaVinci Resolve Free)
+For users without the Studio version who want to apply the look in post-production:
+
+1.  Import the provided `.cube` files to DaVinci Resolve.
+2.  Workflow: V-Log -> Corrector.
+3.  Drag and drop your desired LUT onto Corrector node.
+
+> **Note**: This is simpler than the Studio workflow, but slightly less precise since it relies on a standard 33-point LUT rather than the DCTL math.
+
+### 3. The Pro Way (For DaVinci Resolve Studio)
+If you want full control in post:
+
+1.  Use the provided `.dctl` file.
+2.  Workflow: V-Log -> [CST to ACES (AP0), Linear] -> [My DCTL] -> [Official Fuji LUT].
+3.  disable Tone Mapping and White Point Adaptation on CST Node.
+
+This gives you the flexibility to swap film simulations after shooting.
+
+> **Note**: DCTL is a feature exclusive to the paid DaVinci Resolve Studio version.
 
 ---
 

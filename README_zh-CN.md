@@ -134,19 +134,33 @@
 
 ## 🛠️ 使用方法 (Usage)
 
-### 📷 方案 A：机内监看 (In-Camera)
-适用于 Panasonic S1R II, S5M2, S1H 等支持加载 LUT 的机型。
-1. 下载 `Luts` 文件夹中的 `.cube` 文件（推荐使用 33-Point 版本以兼容相机性能）。
-2. 将文件复制到 SD 卡。
-3. 在相机菜单中加载 LUT 并应用到 V-Log 监看（V-Log View Assist）。
+### 1. 简易方式 (相机 / 实时 LUT)
+仓库中已包含预先生成的 33 点 Cube LUT。
 
-### 🎨 方案 B：DaVinci Resolve 工作流 (Post-Production)
-为了获得最高画质（避免 LUT 带来的精度损失），建议在达芬奇中使用 DCTL 脚本。(请注意：DCTL 功能为达芬奇 Studio 付费版独占功能)。
+1.  下载 `.cube` 文件。
+2.  将它们复制到相机的 SD 卡中（或使用 Lumix Lab App）。
+3.  将它们加载到 LUT 库中。
+4.  即可直接拍摄带有富士风格的 JPEG 或视频！
 
-**节点结构：**
-1.  **CST Node**: Panasonic V-Gamut/V-Log -> ACES AP0 / Linear。**重要提示**：请关闭此节点的 **Tone Mapping (色调映射)** 和 **White Point Adaptation (白点自适应)**。
-2.  **DCTL Node**: 加载本项目提供的 `ACES_to_FLog2C_Inverse.dctl`。
-3.  **LUT Node**: 加载富士官方 F-Log2C 胶片模拟 LUT。
+### 2. 标准方式 (DaVinci Resolve 免费版)
+适用于没有 Studio 版本、希望在后期制作中应用风格的用户：
+
+1.  将提供的 `.cube` 文件导入 DaVinci Resolve。
+2.  工作流程: V-Log -> 校色节点 (Corrector)。
+3.  将您想要的 LUT 拖放到校色节点上。
+
+> **注意**: 此工作流程比 Studio 版本更简单，但精度略低，因为它依赖于标准的 33 点 LUT 而非 DCTL 的数学计算。
+
+### 3. 专业方式 (DaVinci Resolve Studio)
+如果您希望在后期制作中获得完全控制：
+
+1.  使用提供的 `.dctl` 文件。
+2.  工作流程: V-Log -> [CST 至 ACES (AP0), 线性] -> [我的 DCTL] -> [富士官方 LUT]。
+3.  在色彩空间转换 (CST) 节点上禁用 **色调映射 (Tone Mapping)** 和 **白点自适应 (White Point Adaptation)**。
+
+这样您就可以在拍摄后灵活地更换胶片模拟。
+
+> **注意**: DCTL 是 DaVinci Resolve Studio 付费版独有的功能。
 
 ---
 
