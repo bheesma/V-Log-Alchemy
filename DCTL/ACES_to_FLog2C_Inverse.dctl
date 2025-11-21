@@ -1,7 +1,6 @@
 // ACES (AP0) to FUJIFILM F-Log2C Inverse Transform
 // Based on FUJIFILM Official IDT
-// Inverse written by AI Assistant
-
+// Inverse written by MinQ
 __CONSTANT__ float log_base = 10.0f;
 
 // 原始常数保持不变
