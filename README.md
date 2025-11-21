@@ -184,5 +184,4 @@ For detailed DCTL code, please see the `DCTL` folder.
 
 ## ⚠️ Disclaimer
 1. **Physical Limitations**: While we have mathematically aligned the color spaces, the spectral response of different sensor CFAs (Color Filter Arrays) varies. This phenomenon, known as metamerism, means that under certain extreme lighting conditions (e.g., neon lights), the Panasonic's rendering may still have subtle differences from the original camera.
-2. **Exposure Strategy**: Due to the characteristics of the transformed curve (especially F-Log2C), it is recommended to Expose to the Right (ETTR) by 0.5 to 1 stop during shooting to achieve cleaner shadows.
-3. **Unofficial**: This project is not officially affiliated with Panasonic, Fujifilm, or Leica.
+2. **Unofficial**: This project is not officially affiliated with Panasonic, Fujifilm, or Leica.
